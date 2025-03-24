@@ -1,5 +1,5 @@
 from textnode import TextNode, TextType
-from markdown_parser import generate_page, extract_title
+from markdown_parser import generate_page, extract_title, generate_pages_recursive
 import os
 import shutil
 
@@ -24,11 +24,7 @@ def main():
     # Call your copy function with the appropriate paths
     copy_to_directory("static", "public")
 
-    generate_page("content/index.md", "template.html", "public/index.html")
-    # generate_page("content/blog/glorfindel/index.md", "template.html", "public/index.html")
-    # generate_page("content/blog/tom/index.md", "template.html", "public/index.html")
-    # generate_page("content/blog/majesty/index.md", "template.html", "public/index.html")
-    # generate_page("content/contact/index.md", "template.html", "public/index.html")
+    generate_pages_recursive("content", "template.html", "public")
 
 if __name__ == "__main__":
     main()
