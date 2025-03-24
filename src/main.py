@@ -2,6 +2,9 @@ from textnode import TextNode, TextType
 from markdown_parser import generate_page, extract_title, generate_pages_recursive
 import os
 import shutil
+import sys
+
+basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
 
 def copy_to_directory(source, destination):
     if os.path.exists(destination):
@@ -22,9 +25,9 @@ def copy_to_directory(source, destination):
 
 def main():
     # Call your copy function with the appropriate paths
-    copy_to_directory("static", "public")
+    copy_to_directory("static", "docs")
 
-    generate_pages_recursive("content", "template.html", "public")
+    generate_pages_recursive("content", "template.html", "docs", basepath)
 
 if __name__ == "__main__":
     main()

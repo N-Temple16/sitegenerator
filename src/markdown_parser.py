@@ -5,7 +5,7 @@ import os
 import shutil
 import pathlib
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
     with open(from_path, 'r') as from_file:
@@ -19,14 +19,18 @@ def generate_page(from_path, template_path, dest_path):
 
     title = extract_title(from_contents)
 
-    final_html = template_contents.replace("{{ Title }}", title).replace("{{ Content }}", content)
+    final_html = template_contents \
+        .replace("{{ Title }}", title) \
+        .replace("{{ Content }}", content) \
+        .replace('href="/"', f'href="{basepath}"') \
+        .replace('src="/"', f'src="{basepath}"')
 
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
 
     with open(dest_path, 'w') as dest_file:
         dest_file.write(final_html)
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     for item in os.listdir(dir_path_content):
         source_path = os.path.join(dir_path_content, item)
         destination_path = os.path.join(dest_dir_path, item)
@@ -34,10 +38,10 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
         if os.path.isfile(source_path):
             if pathlib.Path(source_path).suffix == ".md":
                 destination_path = os.path.join(dest_dir_path, item.replace(".md", ".html"))
-                generate_page(source_path, template_path, destination_path)
+                generate_page(source_path, template_path, destination_path, basepath)
         else:
             os.makedirs(destination_path, exist_ok=True)
-            generate_pages_recursive(source_path, template_path, destination_path)
+            generate_pages_recursive(source_path, template_path, destination_path, basepath)
 
 def extract_title(markdown):
     lines = markdown.split("\n")
