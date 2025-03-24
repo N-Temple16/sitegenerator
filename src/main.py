@@ -6,6 +6,14 @@ import sys
 
 basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
 
+# Ensure basepath starts with exactly one slash
+if not basepath.startswith("/"):
+    basepath = "/" + basepath
+
+# Remove trailing slashes (unless basepath is just "/")
+if len(basepath) > 1 and basepath.endswith("/"):
+    basepath = basepath[:-1]
+
 def copy_to_directory(source, destination):
     if os.path.exists(destination):
         shutil.rmtree(destination)
